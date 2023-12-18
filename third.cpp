@@ -10,9 +10,9 @@ private:
     std::string name;
     int year;
 public:
-    Book(const int& udk, const std::set<std::string>& authors, const std::string& name, const int& year){
+    Book(const int& udk, const std::string& authors, const std::string& name, const int& year){
         this->udk = udk;
-        this->authors = authors;
+        set_authors(authors);
         this->name = name;
         this->year = year;
     }
@@ -20,9 +20,6 @@ public:
         this->udk = 0;
         this->name = "";
         this->year = 0;
-    }
-    std::string get_name() const{
-        return name;
     }
     void set_udk(const int& n){
         udk = n;
@@ -40,6 +37,23 @@ public:
     void set_year(const int& n){
         year = n;
     }
+    int get_udk() const{
+        return udk;
+    }
+    std::string get_authors() const{
+        std::string temp;
+        for (auto& i : authors){
+            temp += i + ',';
+        }
+        temp.erase(temp.end() - 1);
+        return temp;
+    }
+    std::string get_name() const{
+        return name;
+    }
+    int get_year() const{
+        return year;
+    }
 };
 
 struct comp_by_name {
@@ -48,12 +62,12 @@ struct comp_by_name {
     }
 };
 
-void file_read(std::set<Book, comp_by_name>& books){
+void file_read(std::multiset<Book, comp_by_name>& books){
     std::ifstream in("books.txt");
-    Book temp;
     if(in.is_open()){
         std::string str;
         while(std::getline(in, str)){
+            Book temp;
             temp.set_udk(std::stoi(str.substr(0, str.find(';'))));
             str = str.substr(str.find(';') + 1);
             temp.set_authors(str.substr(0, str.find(';')));
@@ -66,12 +80,44 @@ void file_read(std::set<Book, comp_by_name>& books){
     in.close();
 }
 
-void add_book(std::set<Book, comp_by_name>& books, ){
+void add_book(std::multiset<Book, comp_by_name>& books, const int& udk, const std::string& authors,
+              const std::string& name, const int& year){
+    books.insert(Book(udk, authors, name, year));
+}
 
+void delete_book(std::multiset<Book, comp_by_name>& books, const int& udk, const std::string& authors,
+              const std::string& name, const int& year){
+    books.erase(Book(udk, authors, name, year));
+}
+
+std::multiset<Book, comp_by_name> search_by_name(const std::multiset<Book, comp_by_name>& books, std::string name){
+    std::multiset<Book, comp_by_name> temp;
+    for (auto& i : books){
+        if (i.get_name() == name){
+            temp.insert(Book(i.get_udk(), i.get_authors(), i.get_name(), i.get_year()));
+        }
+    }
+    return temp;
+}
+
+std::multiset<Book, comp_by_name> search_by_author(const std::multiset<Book, comp_by_name>& books, std::string author){
+    std::multiset<Book, comp_by_name> temp;
+    for (auto& i : books){
+        if (i.get_authors().find(author) != std::string::npos){
+            temp.insert(Book(i.get_udk(), i.get_authors(), i.get_name(), i.get_year()));
+        }
+    }
+    return temp;
 }
 
 int main(){
-    std::set<Book, comp_by_name> books;
+    std::multiset<Book, comp_by_name> books;
     file_read(books);
+    //delete_book(books, 2398456, "Glek Q.W.,Sasun A.B.", "a", 1950);
+    /*std::multiset<Book, comp_by_name> name;
+    std::string temp = "Konax";
+    name =  search_by_name(books, temp);*/
+    std::string author = "Glek Q.W.";
+    std::multiset<Book, comp_by_name> authors = search_by_author(books, author);
     std::cout << " ";
 }

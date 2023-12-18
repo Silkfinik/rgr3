@@ -87,7 +87,12 @@ void add_book(std::multiset<Book, comp_by_name>& books, const int& udk, const st
 
 void delete_book(std::multiset<Book, comp_by_name>& books, const int& udk, const std::string& authors,
               const std::string& name, const int& year){
-    books.erase(Book(udk, authors, name, year));
+    for (auto it = books.begin(); it != books.end(); it++) {
+        if (it->get_udk() == udk && it->get_name() == name && it->get_authors() == authors && it->get_year() == year) {
+            books.erase(it);
+            return;
+        }
+    }
 }
 
 std::multiset<Book, comp_by_name> search_by_name(const std::multiset<Book, comp_by_name>& books, std::string name){
@@ -143,12 +148,12 @@ void add_delete_author_by_udk(std::multiset<Book, comp_by_name>& books, const in
 int main(){
     std::multiset<Book, comp_by_name> books;
     file_read(books);
-    //delete_book(books, 2398456, "Glek Q.W.,Sasun A.B.", "a", 1950);
-    /*std::multiset<Book, comp_by_name> name;
+    delete_book(books, 2398456, "Glek Q.W.,Sasun A.B.", "a", 1950);
+    std::multiset<Book, comp_by_name> name;
     std::string temp = "Ko";
     name =  search_by_name(books, temp);
     std::string author = "Glek Q.W.";
-    std::multiset<Book, comp_by_name> authors = search_by_author(books, author);*/
+    std::multiset<Book, comp_by_name> authors = search_by_author(books, author);
     add_delete_author_by_udk(books, 1, "kjsdfhkjsdfh", 'a');
     std::cout << " ";
     add_delete_author_by_udk(books, 1, "kjsdfhkjsdfh", 'd');

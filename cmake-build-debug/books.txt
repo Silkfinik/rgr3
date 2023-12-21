@@ -1,4 +1,4 @@
-2398456;Sasun A.B.,Glek Q.W.;Konax;1950
+2398456;Sasun A.B.,Glek Q.W.;Conax;1950
 2398456;Glek Q.W.,Sasun A.B.;b;1950
 2398456;Glek Q.W.,Sasun A.B.;a;1950
 2398458;Glek Q.W.,Sasun A.B.;a;1950
